@@ -90,5 +90,5 @@ If you wanted to write to two spreadsheets instead of tabs (or in addition), set
         batch=second_spreadsheet_data
     )
 
-    sheet_dat_sent = True
+    sheet_data_sent = True
 ```
