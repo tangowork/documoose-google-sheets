@@ -1,6 +1,6 @@
 # [Docassemble Google Sheets Integration](https://docassemble.org/) from [DocuMoose](https://documoose.ca/)
 
-google_sheets.py is a python module for Docassemble to send data from an interview to google sheets.
+`google_sheets.py` is a python module for Docassemble to send data from an interview to google sheets.
 
 ## Benefits
 This module allows you to:
@@ -13,14 +13,14 @@ This module allows you to:
 
 
 ## Installation
-1. Copy the google_sheets.py file into your DA package folder.
+1. Copy the `google_sheets.py` file into your DA package folder.
 2. Import the module into your interview file
 
 ## Usage
-GoogleSheetAppender has only one method to use, append_batch.
-It takes a spreadsheet_key which is the GS sheet ID, and batch, which is an array of AppendRow instances.
+`GoogleSheetAppender` has only one method to use, `append_batch`.
+It takes a `spreadsheet_key` which is the GS sheet ID, and `batch`, which is an array of AppendRow instances.
 
-AppendRow has a sheet_id and data key.
+`AppendRow` has a `sheet_id` and `data` key.
 'sheet_id' is integer value for the Google Sheet tab id
 'data' is a array of dictionaries of the actual column and row data.
 Each item in the data array represents a row entry and the keys of the dictionary are the column headers.
