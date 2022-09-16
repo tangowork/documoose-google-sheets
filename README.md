@@ -26,52 +26,135 @@ It takes a `spreadsheet_key` which is the GS sheet ID, and `batch`, which is an 
 Each item in the data array represents a row entry and the keys of the dictionary are the column headers.
 
 ### Example
+`example_interview.yml`
 ```yml
-objects:
-    - user: Person
-    - second_user: Person
+imports:
+  - datetime
 ---
+modules:
+  - .google_sheets
+---
+objects:
+  - events: DAList.using(object_type=Thing, ask_number=True)
+---
+mandatory: True
 code: |
-    SHEET_ID = "1234abcd5678efgh9090"
+  likes_animals
+  favorite_vegetable
+  favorite_color
+  events.gather()
+  sheet_data_sent
+  final_screen
+---
+question: Do you like animals?
+fields:
+  - Animal's are great!: likes_animals
+    datatype: yesnoradio
+  - Animal: favorite_animal
+    show if: likes_animals
+    required: True
+---
+question: What is your favorite vegetable?
+fields:
+  - Vegetable: favorite_vegetable
+---
+show if: favorite_animal
+question: What a coincidence!
+subquestion: |
+  My favorite animal is the ${ favorite_animal }, too!
+buttons:
+  - Submit: continue
+---
+question: What is your favorite color
+fields:
+  - Color: favorite_color
+---
+question: How many events?
+fields:
+  - number: events.target_number
+    min: 0
+    max: 2
+    datatype: integer
+---
+question: Event ${ ordinal(i) } details.
+fields:
+  - Name: events[i].name.text
+  - Date: events[i].date
+    datatype: date
+  - Host: events[i].host
+  - duration: events[i].duration
+    datatype: integer
+---
+id: events_thanks
+mandatory: |
+  events.target_number > 0
+question: |
+  Thank you for telling us about these events.
+subquestion: |
+  % for event in events:
+  ${ event }: Held on ${ event.date } with ${ event.host } as the host.
 
+  % endfor
+buttons:
+  - Continue: continue
+---
+include:
+  - append-data.yml
+---
+id: final_screen
+event: final_screen
+prevent going back: True
+question: Thank you for your submission!
+buttons:
+  - Restart: restart
+  - Exit: exit
+---
+```
 
-    example_data = {
-        'time_submitted': datetime.datetime.now(),
-        'submitter': user,
-        'favourite_colour': favourite_color,
-        'likes_animals': likes_animals,
-    }
+`append-data.yml`
+```yml
+code: |
+  SHEET_ID = "1234abcdef567890-ab12"
+  SHEET_TABS = {
+      'example_tab_1': 0,
+      'example_tab_2': 123450033
+  }
 
-    another_example_data = {
-        'time_submitted': datetime.datetime.now(),
-        'submitter': user,
-        'favourite_animal': favourite_animal,
-        'likes_animals': likes_animals,
-    }
+  example_sheet_data = []
 
-    third_example_data = {
-        'event_date': event.datetime,
-        'event_name': event.name,
-        'event_host': event.host,
-        'event_durattion': event.duration
-    }
+  example_data = {
+      'time_submitted': datetime.datetime.now(),
+      'favorite_color': favorite_color,
+      'likes_animals': likes_animals,
+  }
+  if (likes_animals):
+    example_data['favorite_animal'] = favorite_animal
 
-    SHEET_TABS = {
-        'example_tab_1': 0,
-        'example_tab_2': 1234567890
-    }
+  example_sheet_data.append(AppendRow(sheet_id=SHEET_TABS['example_tab_1'], data=example_data))
 
-    example_sheet_data = []
-    example_sheet_data.append(AppendRow(sheet_id=SHEET_TABS['example_tab_1']), data=example_data))
-    example_sheet_data.append(AppendRow(sheet_id=SHEET_TABS['example_tab_1']), data=another_example_data))
-    example_sheet_data.append(AppendRow(sheet_id=SHEET_TABS['example_tab_2']), data=third_example_data))
-    
-    GoogleSheetAppender().append_batch(
-        spreadsheet_key=SHEET_ID,
-        batch=example_sheet_data
-    )
+  another_example_data = {
+      'time_submitted': datetime.datetime.now(),
+      'favorite_color': favorite_color
+  }
 
-    sheet_data_sent = True
+  example_sheet_data.append(AppendRow(sheet_id=SHEET_TABS['example_tab_1'], data=another_example_data))
+
+  if len(events.elements) > 0:
+    for event in events:
+      event_data = {
+        'event': event.name.text,
+        'host': event.host,
+        'date': event.date,
+        'duration': event.duration
+      }
+      example_sheet_data.append(AppendRow(sheet_id=SHEET_TABS['example_tab_2'], data=event_data))
+  
+  GoogleSheetAppender().append_batch(
+      spreadsheet_key=SHEET_ID,
+      batch=example_sheet_data
+  )
+
+  sheet_data_sent = True
 ```
 
 If you wanted to write to two spreadsheets instead of tabs (or in addition), set up the data the same as the third example but add an additional data array
