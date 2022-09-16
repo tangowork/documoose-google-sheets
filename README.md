@@ -143,31 +143,43 @@ buttons:
 ### append-data.yml
 ```yml
 code: |
+  # Add your sheet ids and tabs, do not put code that is not intended to be private here
+  # Instead pull values from config
   SHEET_ID = "1234abcdef567890-ab12"
   SHEET_TABS = {
       'example_tab_1': 0,
       'example_tab_2': 123450033
   }
 
+  # Initialize a list to add "AppendRow"s to
   example_sheet_data = []
 
+  # Create a data dict to pass to AppendRow, keys are column headers
   example_data = {
       'time_submitted': datetime.datetime.now(),
       'favorite_color': favorite_color,
       'likes_animals': likes_animals,
   }
+
+  # Check if likes_animals is true before adding favorite_animal to the data dict
   if (likes_animals):
     example_data['favorite_animal'] = favorite_animal
 
+  # append the result of AppendRow to your spreadsheets data list.
+  # pass in your sheet_id and data dict to the AppendRow call
   example_sheet_data.append(AppendRow(sheet_id=SHEET_TABS['example_tab_1'], data=example_data))
 
+  # Setup second data dict to create a second row
   another_example_data = {
       'time_submitted': datetime.datetime.now(),
       'favorite_color': favorite_color
   }
 
+  # append the AppendRow to have a second row added to the sheet.
   example_sheet_data.append(AppendRow(sheet_id=SHEET_TABS['example_tab_1'], data=another_example_data))
 
+  # Check if events exist and loop over them
+  # For each event append a row with values written to the column specified by the event_data keys.
   if len(events.elements) > 0:
     for event in events:
       event_data = {
@@ -178,6 +190,7 @@ code: |
       }
       example_sheet_data.append(AppendRow(sheet_id=SHEET_TABS['example_tab_2'], data=event_data))
   
+  # Call GoogleSheetAppender's append_batch method, passing in the spreadsheet id and batch data as a list of AppendRows.
   GoogleSheetAppender().append_batch(
       spreadsheet_key=SHEET_ID,
       batch=example_sheet_data
