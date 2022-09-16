@@ -44,17 +44,17 @@ modules:
 
 Each item in the data array represents a row entry, and the keys of the dictionary are the column headers.
 
+## [Try a live demo](https://app.documoose.ca/start/google-sheets-demo)
 
-### Example
 
-[Try this demo live](https://app.documoose.ca/start/google-sheets-demo)
+## Example
 
 To try this example:
 1. Install `google_sheets.py` as described above
 2. Create two interview files using the code below, `example_interview.yml` and `append-data.yml`
 3. In `append_data.yml`, update SHEET_ID and SHEET_TABS with the actual ids from your Google Sheet.
 
-#### example_interview.yml
+### example_interview.yml
 ```yml
 imports:
   - datetime
@@ -140,7 +140,7 @@ buttons:
 ---
 ```
 
-#### append-data.yml
+### append-data.yml
 ```yml
 code: |
   SHEET_ID = "1234abcdef567890-ab12"
@@ -185,6 +185,8 @@ code: |
 
   sheet_data_sent = True
 ```
+
+### Write to multiple spreadsheets
 
 If you want to write to two spreadsheets instead of tabs (or in addition), set up the data the same as the third example but add an additional data array:
 ```yml
