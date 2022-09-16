@@ -9,14 +9,23 @@ We started with the Docassemble [demo code for Google Sheets](https://github.com
 
 ## Benefits
 
-- Refer to sheet by id instead of name
-- Post to different tabs by tab id
-- Post row updates in batches for 10X - 50X faster performance
-- Write to correct cell even if column is moved (column name lookup)
-- Write object data (breaks objects into multiple columns)
-- Set cell format based on datatype
-- Set datetimes
+**Refer to spreadsheet by id.** 
+Rename your spreadsheet at any time!
 
+**Post to different tabs by tab id.** 
+Add new tabs, move them around, rename them!
+
+**Post row updates in batches.** 
+We use the low-level `batch_update` method to make many edits at once, reducing API calls and increasing performance up to 20X for big writes.
+
+**Write to correct cell even if column is moved (column name lookup).** 
+Reorder your columns at any time!
+
+**Accept objects and explode to multiple columns.** 
+Each object property becomes a column name in the format *objectName[propertyName]*.
+
+**Set datetimes.** 
+Datetimes are written properly to Google Sheets as datetimes, not text.
 
 
 ## Installation
