@@ -1,32 +1,43 @@
-# [Docassemble Google Sheets Integration](https://docassemble.org/) from [DocuMoose](https://documoose.ca/)
+# Enhanced Google Sheets integration for [Docassemble](https://docassemble.org), by [DocuMoose](https://documoose.ca/)
 
-`google_sheets.py` is a python module for Docassemble to send data from an interview to google sheets.
+`google_sheets.py` is a Python module for Docassemble to send data from an interview to Google Sheets.
+
+We started with the Docassemble [demo code for Google Sheets](https://github.com/jhpyle/docassemble/blob/master/docassemble_demo/docassemble/demo/google_sheets.py) and added the enhancements listed below. 
+
 
 ## Benefits
-This module allows you to:
-- batch many row entries per sheet tab for quicker speed and more efficient use of api calls.
-- post to different tabs by id
-- write to correct cell by named headers even if column is moved since last data entry (not during api call)
-- write object data with prepended names based on object name
-- have values written into sheet correctly based on datatypes
-- set datetimes
+
+- Refer to sheet by id instead of name
+- Post to different tabs by tab id
+- Post row updates in batches for 10X - 50X faster performance
+- Write to correct cell even if column is moved (column name lookup)
+- Write object data (breaks objects into multiple columns)
+- Set cell format based on datatype
+- Set datetimes
 
 
 ## Installation
-1. Copy the `google_sheets.py` file into your DA package folder.
+1. Copy the `google_sheets.py` file into your Docassemble package folder.
 2. Import the module into your interview file
 
+
 ## Usage
-`GoogleSheetAppender` has only one method to use, `append_batch`.
-It takes a `spreadsheet_key` which is the GS sheet ID, and `batch`, which is an array of AppendRow instances.
+`GoogleSheetAppender` has only one method to use: `append_batch`.
+
+It takes a `spreadsheet_key` (the Google Sheet spreadsheet id) and `batch` (an array of `AppendRow` instances).
 
 `AppendRow` has a `sheet_id` and `data` key.
-'sheet_id' is integer value for the Google Sheet tab id
-'data' is a array of dictionaries of the actual column and row data.
-Each item in the data array represents a row entry and the keys of the dictionary are the column headers.
+
+`sheet_id` is the integer value for the Google Sheet tab id.
+
+`data` is an array of dictionaries of the actual column and row data.
+
+Each item in the data array represents a row entry, and the keys of the dictionary are the column headers.
+
 
 ### Example
-`example_interview.yml`
+
+#### example_interview.yml
 ```yml
 imports:
   - datetime
@@ -111,7 +122,7 @@ buttons:
 ---
 ```
 
-`append-data.yml`
+#### append-data.yml
 ```yml
 code: |
   SHEET_ID = "1234abcdef567890-ab12"
@@ -157,8 +168,7 @@ code: |
   sheet_data_sent = True
 ```
 
-If you wanted to write to two spreadsheets instead of tabs (or in addition), set up the data the same as the third example but add an additional data array
-
+If you want to write to two spreadsheets instead of tabs (or in addition), set up the data the same as the third example but add an additional data array:
 ```yml
     second_spreadsheet_data = []
     example_sheet_data.append(AppendRow(sheet_id=SHEET_TABS['example_tab_1'], data=example_data))
