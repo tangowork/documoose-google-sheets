@@ -16,26 +16,41 @@ We started with the Docassemble [demo code for Google Sheets](https://github.com
 - Set datetimes
 
 
-## Installation
-1. Copy the `google_sheets.py` file into your Docassemble package folder.
-2. Import the module into your interview file
 
+## Installation
+
+1. Follow the [Docassemble documentation for using Google Sheets](https://docassemble.org/docs/functions.html#google%20sheets%20example):
+   1. Set up your Google developer account as described
+   2. Select a Google Sheet as described
+   3. Add your service account credentials to Configuration as described
+2. Go to the modules folder of your Docassemble Playground. Copy the file [`google_sheets.py`](https://github.com/tangowork/docassemble-google_sheets_integration/blob/main/google_sheets.py) into your modules folder
+3. Reference the module in your interview file, e.g.:
+```
+modules:
+  - .google_sheets
+```
 
 ## Usage
-`GoogleSheetAppender` has only one method to use: `append_batch`.
 
-It takes a `spreadsheet_key` (the Google Sheet spreadsheet id) and `batch` (an array of `AppendRow` instances).
+`GoogleSheetAppender` has only one method to use: `append_batch`. It expects:
+- `spreadsheet_key` (the Google Sheet spreadsheet id) 
+- `batch` (an array of `AppendRow` instances)
 
 `AppendRow` has a `sheet_id` and `data` key.
-
-`sheet_id` is the integer value for the Google Sheet tab id.
-
-`data` is an array of dictionaries of the actual column and row data.
+- `sheet_id` is the integer value for the Google Sheet tab id.
+- `data` is an array of dictionaries of the actual column and row data.
 
 Each item in the data array represents a row entry, and the keys of the dictionary are the column headers.
 
 
 ### Example
+
+[Try this demo live](https://app.documoose.ca/start/google-sheets-demo)
+
+To try this example:
+1. Install `google_sheets.py` as described above
+2. Create two interview files using the code below, `example_interview.yml` and `append-data.yml`
+3. In `append_data.yml`, update SHEET_ID and SHEET_TABS with the actual ids from your Google Sheet.
 
 #### example_interview.yml
 ```yml
@@ -59,13 +74,13 @@ code: |
 ---
 question: Do you like animals?
 fields:
-  - Animal's are great!: likes_animals
+  - Animals are great!: likes_animals
     datatype: yesnoradio
-  - Animal: favorite_animal
+  - What's your favourite animal?: favorite_animal
     show if: likes_animals
     required: True
 ---
-question: What is your favorite vegetable?
+question: What's your favorite vegetable?
 fields:
   - Vegetable: favorite_vegetable
 ---
@@ -76,24 +91,25 @@ subquestion: |
 buttons:
   - Submit: continue
 ---
-question: What is your favorite color
+question: What's your favorite colour?
 fields:
-  - Color: favorite_color
+  - Colour: favorite_color
 ---
-question: How many events?
+question: How many events did you attend last month?
+sub: Max 2
 fields:
-  - number: events.target_number
+  - Number of events: events.target_number
     min: 0
     max: 2
     datatype: integer
 ---
-question: Event ${ ordinal(i) } details.
+question: Please provide details of the ${ ordinal(i) } event.
 fields:
-  - Name: events[i].name.text
+  - Event name: events[i].name.text
   - Date: events[i].date
     datatype: date
   - Host: events[i].host
-  - duration: events[i].duration
+  - Duration: events[i].duration
     datatype: integer
 ---
 id: events_thanks
