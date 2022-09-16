@@ -2,7 +2,7 @@
 
 ## Enhanced Google Sheets integration for [Docassemble](https://docassemble.org), by [DocuMoose](https://documoose.ca/)
 
-`google_sheets.py` is a Python module for Docassemble to send data from an interview to Google Sheets.
+`documoose-google-sheets` is a Python module for Docassemble to send data from an interview to Google Sheets.
 
 We started with the Docassemble [demo code for Google Sheets](https://github.com/jhpyle/docassemble/blob/master/docassemble_demo/docassemble/demo/google_sheets.py) and added the enhancements listed below. 
 
